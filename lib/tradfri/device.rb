@@ -18,8 +18,6 @@ module Tradfri
     # I don’t know if/where these are officially documented
     NAME = 9001
 
-    BULBS = 15001 # TODO discover this
-
     def bulb?
       info.has_key? LIGHT_CONTROL.to_s
     end
