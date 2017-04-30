@@ -6,13 +6,16 @@ module Tradfri
     SCHEME = 'coaps'
     DISCOVERY_PATH = '/.well-known/core'
 
-    def bulbs
+    def devices
       client.get(key, discovery_uri).split(',').
         map { |link| %r{\A</(?<uri>[^>]+)>}.match(link) }.
         compact.
         map { |match| discovery_uri.merge(match[:uri]) }.
-        map { |uri| Device.new(self, uri) }.
-        select(&:bulb?)
+        map { |uri| Device.new(self, uri) }
+    end
+
+    def bulbs
+      devices.select(&:bulb?)
     end
 
     def put(uri, payload)
