@@ -39,7 +39,6 @@ module Tradfri
         '-e', JSON.generate(payload),
         uri.to_s
 
-      puts args.join(' ')
       system *args
     end
   end
