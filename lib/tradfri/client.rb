@@ -1,4 +1,5 @@
 require 'json'
+require 'open3'
 require 'tempfile'
 require 'tradfri/gateway'
 require 'tradfri/service'
@@ -20,26 +21,26 @@ module Tradfri
 
     def get(key, uri)
       Tempfile.open do |file|
-        args = coap_client_path,
+        args =
           '-k', key,
           '-m', METHOD_GET,
           '-o', file.path,
           uri.to_s
 
-        system *args
+        Open3.capture3(coap_client_path, *args)
 
         file.read
       end
     end
 
     def put(key, uri, payload)
-      args = coap_client_path,
+      args =
         '-k', key,
         '-m', METHOD_PUT,
         '-e', JSON.generate(payload),
         uri.to_s
 
-      system *args
+      Open3.capture3(coap_client_path, *args)
     end
   end
 end
