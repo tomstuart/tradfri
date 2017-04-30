@@ -11,8 +11,6 @@ module Tradfri
     DISCOVERY_PATH = '/.well-known/core'
     METHOD_GET = 'get'
 
-    BULBS = 15001 # TODO discover this
-
     def bulbs
       Tempfile.open do |file|
         args =
@@ -25,10 +23,11 @@ module Tradfri
         system *args
 
         file.read.split(',').
-          map { |link| %r{\A</(?<uri>/#{BULBS}/\d+)>}.match(link) }.
+          map { |link| %r{\A</(?<uri>/\d+/\d+)>}.match(link) }.
           compact.
           map { |match| discovery_uri.merge(match[:uri]) }.
-          map { |uri| Device.new(uri) }
+          map { |uri| Device.new(uri) }.
+          select(&:bulb?)
       end
     end
 
