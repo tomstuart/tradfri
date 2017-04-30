@@ -1,3 +1,5 @@
+require 'json'
+
 module Tradfri
   class Device < Struct.new(:gateway, :uri)
     # https://github.com/IPSO-Alliance/pub/blob/master/reg/xml/3311.xml
@@ -13,10 +15,21 @@ module Tradfri
     COLOUR_NORMAL = 'f1e0b5'
     COLOUR_WARM = 'efd275'
 
+    # I don’t know if/where these are officially documented
+    NAME = 9001
+
     BULBS = 15001 # TODO discover this
 
     def bulb?
       %r{\A/#{BULBS}/\d+\z}.match?(uri.path)
+    end
+
+    def name
+      info[NAME.to_s]
+    end
+
+    def info
+      JSON.parse(gateway.get(uri))
     end
 
     def on

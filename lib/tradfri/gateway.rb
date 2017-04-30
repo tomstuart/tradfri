@@ -18,6 +18,10 @@ module Tradfri
       devices.select(&:bulb?)
     end
 
+    def get(uri)
+      client.get key, uri
+    end
+
     def put(uri, payload)
       client.put key, uri, payload
     end
