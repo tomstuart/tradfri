@@ -1,6 +1,8 @@
 require 'tempfile'
 require 'uri'
 
+require 'tradfri/device'
+
 module Tradfri
   class Gateway < Struct.new(:host, :port, :key)
     CLIENT_PATH = 'bin/coap-client'
@@ -11,7 +13,7 @@ module Tradfri
 
     BULBS = 15001 # TODO discover this
 
-    def bulb_uris
+    def bulbs
       Tempfile.open do |file|
         args =
           CLIENT_PATH,
@@ -25,7 +27,8 @@ module Tradfri
         file.read.split(',').
           map { |link| %r{\A</(?<uri>/#{BULBS}/\d+)>}.match(link) }.
           compact.
-          map { |match| discovery_uri.merge(match[:uri]) }
+          map { |match| discovery_uri.merge(match[:uri]) }.
+          map { |uri| Device.new(uri) }
       end
     end
 
