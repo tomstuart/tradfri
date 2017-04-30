@@ -15,8 +15,8 @@ module Tradfri
         select(&:bulb?)
     end
 
-    def put(uri, state)
-      client.put key, uri, state
+    def put(uri, payload)
+      client.put key, uri, payload
     end
 
     private def discovery_uri

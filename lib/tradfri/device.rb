@@ -1,6 +1,7 @@
 module Tradfri
   class Device < Struct.new(:gateway, :uri)
     # https://github.com/IPSO-Alliance/pub/blob/master/reg/xml/3311.xml
+    LIGHT_CONTROL = 3311
     ON_OFF = 5850
     OFF = 0
     ON = 1
@@ -19,27 +20,31 @@ module Tradfri
     end
 
     def on
-      gateway.put uri, ON_OFF => ON
+      change ON_OFF => ON
     end
 
     def off
-      gateway.put uri, ON_OFF => OFF
+      change ON_OFF => OFF
     end
 
     def dim(brightness)
-      gateway.put uri, DIMMER => DIMMER_MIN + (brightness * (DIMMER_MAX - DIMMER_MIN)).round
+      change DIMMER => DIMMER_MIN + (brightness * (DIMMER_MAX - DIMMER_MIN)).round
     end
 
     def cold
-      gateway.put uri, COLOUR => COLOUR_COLD
+      change COLOUR => COLOUR_COLD
     end
 
     def normal
-      gateway.put uri, COLOUR => COLOUR_NORMAL
+      change COLOUR => COLOUR_NORMAL
     end
 
     def warm
-      gateway.put uri, COLOUR => COLOUR_WARM
+      change COLOUR => COLOUR_WARM
+    end
+
+    private def change(state)
+      gateway.put uri, LIGHT_CONTROL => [state]
     end
   end
 end

@@ -8,9 +8,6 @@ module Tradfri
     METHOD_GET = 'get'
     METHOD_PUT = 'put'
 
-    # https://github.com/IPSO-Alliance/pub/blob/master/reg/xml/3311.xml
-    LIGHT_CONTROL = 3311
-
     def discover_gateways(keys)
       Service.discover.map do |service|
         connect_to service.host, service.port, keys[service.mac_address]
@@ -35,11 +32,11 @@ module Tradfri
       end
     end
 
-    def put(key, uri, state)
+    def put(key, uri, payload)
       args = coap_client_path,
         '-k', key,
         '-m', METHOD_PUT,
-        '-e', JSON.generate(LIGHT_CONTROL => [state]),
+        '-e', JSON.generate(payload),
         uri.to_s
 
       puts args.join(' ')
