@@ -5,9 +5,7 @@ require 'uri'
 require 'tradfri/device'
 
 module Tradfri
-  class Gateway < Struct.new(:host, :port, :key)
-    CLIENT_PATH = 'bin/coap-client'
-
+  class Gateway < Struct.new(:client, :host, :port, :key)
     SCHEME = 'coaps'
     DISCOVERY_PATH = '/.well-known/core'
     METHOD_GET = 'get'
@@ -19,7 +17,7 @@ module Tradfri
     def bulbs
       Tempfile.open do |file|
         args =
-          CLIENT_PATH,
+          client.coap_client_path,
           '-k', key,
           '-m', METHOD_GET,
           '-o', file.path,
@@ -37,7 +35,7 @@ module Tradfri
     end
 
     def send_command(uri, state)
-      args = CLIENT_PATH,
+      args = client.coap_client_path,
         '-k', key,
         '-m', METHOD_PUT,
         '-e', JSON.generate(LIGHT_CONTROL => [state]),
