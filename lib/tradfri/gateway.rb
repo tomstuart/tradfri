@@ -12,22 +12,20 @@ module Tradfri
     BULBS = 15001 # TODO discover this
 
     def bulb_uris
-      [].tap do |uris|
-        Tempfile.open('tradfri') do |file|
-          args =
-            CLIENT_PATH,
-            '-k', key,
-            '-m', METHOD_GET,
-            '-o', file.path,
-            discovery_uri.to_s
+      Tempfile.open do |file|
+        args =
+          CLIENT_PATH,
+          '-k', key,
+          '-m', METHOD_GET,
+          '-o', file.path,
+          discovery_uri.to_s
 
-          system *args
+        system *args
 
-          file.read.split(',').each do |link|
-            match = %r{\A</(?<uri>/#{BULBS}/\d+)>}.match(link)
-            uris << URI.join(discovery_uri, match[:uri]) if match
-          end
-        end
+        file.read.split(',').
+          map { |link| %r{\A</(?<uri>/#{BULBS}/\d+)>}.match(link) }.
+          compact.
+          map { |match| discovery_uri.merge(match[:uri]) }
       end
     end
 
