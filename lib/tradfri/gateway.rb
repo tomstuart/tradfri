@@ -1,3 +1,4 @@
+require 'json'
 require 'tempfile'
 require 'uri'
 
@@ -10,6 +11,10 @@ module Tradfri
     SCHEME = 'coaps'
     DISCOVERY_PATH = '/.well-known/core'
     METHOD_GET = 'get'
+    METHOD_PUT = 'put'
+
+    # https://github.com/IPSO-Alliance/pub/blob/master/reg/xml/3311.xml
+    LIGHT_CONTROL = 3311
 
     def bulbs
       Tempfile.open do |file|
@@ -29,6 +34,17 @@ module Tradfri
           map { |uri| Device.new(uri) }.
           select(&:bulb?)
       end
+    end
+
+    def send_command(uri, state)
+      args = CLIENT_PATH,
+        '-k', key,
+        '-m', METHOD_PUT,
+        '-e', JSON.generate(LIGHT_CONTROL => [state]),
+        uri.to_s
+
+      puts args.join(' ')
+      system *args
     end
 
     private def discovery_uri
