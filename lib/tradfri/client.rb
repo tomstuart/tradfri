@@ -1,4 +1,3 @@
-require 'json'
 require 'open3'
 require 'tempfile'
 require 'tradfri/gateway'
@@ -37,7 +36,7 @@ module Tradfri
       args =
         '-k', key,
         '-m', METHOD_PUT,
-        '-e', JSON.generate(payload),
+        '-e', payload,
         uri.to_s
 
       Open3.capture3(coap_client_path, *args)

@@ -71,7 +71,7 @@ module Tradfri
     end
 
     private def change(state)
-      gateway.put uri, LIGHT_CONTROL => [state]
+      gateway.put uri, JSON.generate(LIGHT_CONTROL => [state])
     end
   end
 end
