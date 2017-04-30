@@ -1,3 +1,3 @@
 module Tradfri
-  Gateway = Struct.new(:host, :port)
+  Gateway = Struct.new(:host, :port, :key)
 end

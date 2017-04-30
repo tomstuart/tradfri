@@ -7,6 +7,11 @@ module Tradfri
     INTERNET_PROTOCOL = DNSSD::Service::IPv4
     REGISTRATION_TYPE = [SERVICE_TYPE, TRANSPORT_PROTOCOL].join('.')
 
+    def mac_address
+      name.slice %r{(?:\h{2}-){5}\h{2}} ||
+        raise("couldn’t find MAC address in “#{name}”")
+    end
+
     def self.discover
       browse(REGISTRATION_TYPE).map do |reply|
         host, port = resolve(reply, INTERNET_PROTOCOL)
