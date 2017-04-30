@@ -29,7 +29,21 @@ module Tradfri
     end
 
     def info
-      JSON.parse(gateway.get(uri))
+      data = gateway.get(uri)
+
+      result =
+        begin
+          JSON.parse(data)
+        rescue JSON::ParserError
+          {}
+        end
+
+      case result
+      when Hash
+        result
+      else
+        {}
+      end
     end
 
     def on
