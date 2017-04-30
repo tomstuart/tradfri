@@ -19,27 +19,27 @@ module Tradfri
     end
 
     def on
-      gateway.send_command uri, ON_OFF => ON
+      gateway.put uri, ON_OFF => ON
     end
 
     def off
-      gateway.send_command uri, ON_OFF => OFF
+      gateway.put uri, ON_OFF => OFF
     end
 
     def dim(brightness)
-      gateway.send_command uri, DIMMER => DIMMER_MIN + (brightness * (DIMMER_MAX - DIMMER_MIN)).round
+      gateway.put uri, DIMMER => DIMMER_MIN + (brightness * (DIMMER_MAX - DIMMER_MIN)).round
     end
 
     def cold
-      gateway.send_command uri, COLOUR => COLOUR_COLD
+      gateway.put uri, COLOUR => COLOUR_COLD
     end
 
     def normal
-      gateway.send_command uri, COLOUR => COLOUR_NORMAL
+      gateway.put uri, COLOUR => COLOUR_NORMAL
     end
 
     def warm
-      gateway.send_command uri, COLOUR => COLOUR_WARM
+      gateway.put uri, COLOUR => COLOUR_WARM
     end
   end
 end
