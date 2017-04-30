@@ -8,7 +8,7 @@ module Tradfri
 
     def bulbs
       client.get(key, discovery_uri).split(',').
-        map { |link| %r{\A</(?<uri>/\d+/\d+)>}.match(link) }.
+        map { |link| %r{\A</(?<uri>[^>]+)>}.match(link) }.
         compact.
         map { |match| discovery_uri.merge(match[:uri]) }.
         map { |uri| Device.new(self, uri) }.
