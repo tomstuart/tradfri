@@ -7,6 +7,10 @@ module Tradfri
     DIMMER = 5851
     DIMMER_MIN = 0
     DIMMER_MAX = 255
+    COLOUR = 5706
+    COLOUR_COLD = 'f5faf6'
+    COLOUR_NORMAL = 'f1e0b5'
+    COLOUR_WARM = 'efd275'
 
     BULBS = 15001 # TODO discover this
 
@@ -24,6 +28,18 @@ module Tradfri
 
     def dim(brightness)
       gateway.send_command uri, DIMMER => DIMMER_MIN + (brightness * (DIMMER_MAX - DIMMER_MIN)).round
+    end
+
+    def cold
+      gateway.send_command uri, COLOUR => COLOUR_COLD
+    end
+
+    def normal
+      gateway.send_command uri, COLOUR => COLOUR_NORMAL
+    end
+
+    def warm
+      gateway.send_command uri, COLOUR => COLOUR_WARM
     end
   end
 end
