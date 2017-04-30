@@ -31,7 +31,7 @@ module Tradfri
           map { |link| %r{\A</(?<uri>/\d+/\d+)>}.match(link) }.
           compact.
           map { |match| discovery_uri.merge(match[:uri]) }.
-          map { |uri| Device.new(uri) }.
+          map { |uri| Device.new(self, uri) }.
           select(&:bulb?)
       end
     end
